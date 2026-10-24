@@ -1,0 +1,104 @@
+{
+  "name": "ServiceRecord",
+  "type": "object",
+  "properties": {
+    "vehicle_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "routine_maintenance",
+        "repair",
+        "inspection",
+        "brakes",
+        "tires",
+        "electrical",
+        "fluids",
+        "body",
+        "diagnostic",
+        "other"
+      ],
+      "default": "routine_maintenance"
+    },
+    "date_performed": {
+      "type": "string",
+      "format": "date"
+    },
+    "mileage": {
+      "type": "number"
+    },
+    "location_name": {
+      "type": "string"
+    },
+    "location_address": {
+      "type": "string"
+    },
+    "performed_by": {
+      "type": "string"
+    },
+    "parts_replaced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "cost": {
+      "type": "number"
+    },
+    "next_service_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_service_mileage": {
+      "type": "number"
+    },
+    "warranty_provider": {
+      "type": "string"
+    },
+    "warranty_months": {
+      "type": "number"
+    },
+    "warranty_miles": {
+      "type": "number"
+    },
+    "warranty_expires": {
+      "type": "string",
+      "format": "date"
+    },
+    "warranty_notes": {
+      "type": "string"
+    },
+    "receipt_uri": {
+      "type": "string"
+    },
+    "receipt_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "vehicle_id",
+    "title",
+    "date_performed"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

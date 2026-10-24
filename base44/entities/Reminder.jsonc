@@ -1,0 +1,76 @@
+{
+  "name": "Reminder",
+  "type": "object",
+  "properties": {
+    "vehicle_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "maintenance",
+        "warranty",
+        "inspection",
+        "registration",
+        "other"
+      ],
+      "default": "maintenance"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_mileage": {
+      "type": "number"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "service_record_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "vehicle_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
