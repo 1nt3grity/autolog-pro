@@ -1,0 +1,52 @@
+<mjml>
+  <mj-head>
+    <mj-title>Your garage: {{count}} item(s) coming due</mj-title>
+    <mj-preview>AutoLog Pro checked what needs attention on your vehicles.</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-section background-color="#ffffff" padding="0 36px" />
+      <mj-text color="#000000" font-size="15px" line-height="1.6" padding="0" />
+      <mj-button background-color="#eb640a" color="#000000" border-radius="4px" font-weight="700" inner-padding="14px 28px" align="left" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f6f7f9">
+    <mj-section background-color="#eb640a" padding="20px 36px">
+      <mj-column>
+        <mj-group>
+          <mj-column width="44px" padding="0">
+            <mj-image src="https://media.base44.com/images/public/6adca41a71da92dee5d62b28/c777466c4_logo.png" alt="AutoLog Pro" align="left" width="36px" />
+          </mj-column>
+          <mj-column padding="0">
+            <mj-text font-family="Space Grotesk, Arial, sans-serif" font-size="18px" font-weight="700" color="#000000" padding="8px 0 0 10px">AutoLog Pro</mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="36px 36px 10px">
+      <mj-column>
+        <mj-text font-family="Space Grotesk, Arial, sans-serif" font-size="26px" font-weight="700" line-height="1.2">{{count}} item(s) need a look</mj-text>
+        <mj-text color="#6b7280" font-size="15px">Hi {{first_name}}, here is what is coming up across your garage.</mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#ffffff" border-radius="4px" border="1px solid #e5e7eb" padding="22px 26px">
+      <mj-column>
+        <mj-text font-size="15px">{{summary}}</mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="26px 36px 10px">
+      <mj-column>
+        <mj-button href="https://autotracker.base44.app" font-family="Inter, Helvetica, Arial, sans-serif">Open AutoLog Pro</mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="14px 36px 36px">
+      <mj-column>
+        <mj-divider border-color="#e5e7eb" padding="0 0 16px 0" />
+        <mj-text font-size="12px" color="#6b7280" line-height="1.5">You are getting this because you turned on service email reminders in AutoLog Pro. You can switch them off any time from your garage home page.</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

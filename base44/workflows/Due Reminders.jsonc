@@ -1,0 +1,44 @@
+{
+  "description": "Checks pending reminders every morning and emails users who opted in about items due within 7 days or overdue",
+  "name": "Due Reminders",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 8 * * *",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "due_reminders",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_due": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendDueReminders"
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Email due items",
+            "description": "Daily reminder digest"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -8,6 +8,7 @@ import {
   DollarSign,
   FileSpreadsheet,
   FileText,
+  Mail,
   Plus,
   Wrench
 } from 'lucide-react';
@@ -16,6 +17,7 @@ import StatTile from '@/components/StatTile';
 import EmptyState from '@/components/EmptyState';
 import VehicleForm from '@/components/vehicles/VehicleForm';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import { dueLabel, formatDate, formatMiles, formatMoney, isOverdue } from '@/lib/carUtils';
@@ -31,16 +33,22 @@ export default function Home() {
   const [stats, setStats] = useState({ records: 0, spend: 0 });
   const [formOpen, setFormOpen] = useState(false);
   const [exporting, setExporting] = useState('');
+  const [emailEnabled, setEmailEnabled] = useState(null);
+  const [me, setMe] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [vehiclePage, reminderPage, recordPage, agg] = await Promise.all([
+    const [vehiclePage, reminderPage, recordPage, agg, me] = await Promise.all([
       base44.entities.Vehicle.list({ sort: '-created_date', limit: 50 }),
       base44.entities.Reminder.filter({ status: 'pending' }, { sort: 'due_date', limit: 50 }),
       base44.entities.ServiceRecord.list({ sort: '-date_performed', limit: 20 }),
-      base44.entities.ServiceRecord.aggregate({ query: {}, sum: ['cost'] })
+      base44.entities.ServiceRecord.aggregate({ query: {}, sum: ['cost'] }),
+      base44.auth.me()
     ]);
     const row = agg?.rows?.[0] || {};
+    setMe(me);
+    const settingsPage = await base44.entities.UserSettings.filter({ created_by_id: me.id }, { limit: 1 });
+    setEmailEnabled((settingsPage.items || []).some((s) => s.email_reminders_enabled === true));
     setVehicles(vehiclePage.items || []);
     setReminders(reminderPage.items || []);
     setRecords(recordPage.items || []);
@@ -89,6 +97,31 @@ export default function Home() {
       toast({ title: 'Export failed', description: error.message, variant: 'destructive' });
     } finally {
       setExporting('');
+    }
+  };
+
+  const toggleEmail = async (next) => {
+    if (!me) return;
+    setEmailEnabled(next);
+    try {
+      const existing = await base44.entities.UserSettings.filter({ created_by_id: me.id }, { limit: 1 });
+      if (existing.items?.length) {
+        await base44.entities.UserSettings.update(existing.items[0].id, {
+          email: me.email,
+          email_reminders_enabled: next
+        });
+      } else {
+        await base44.entities.UserSettings.create({ email: me.email, email_reminders_enabled: next });
+      }
+      toast({
+        title: next ? 'Email reminders on' : 'Email reminders off',
+        description: next
+          ? 'You will get a morning email when service comes due or mileage hits the mark.'
+          : 'No more reminder emails.'
+      });
+    } catch (error) {
+      setEmailEnabled(!next);
+      toast({ title: 'Could not save setting', description: error.message, variant: 'destructive' });
     }
   };
 
@@ -175,6 +208,21 @@ export default function Home() {
               <Link to="/garage" className="hidden text-sm font-medium text-accent hover:opacity-70 sm:block">
                 View vehicles
               </Link>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 rounded-2xl border border-border/70 bg-card px-4 py-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-secondary">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-heading text-sm font-semibold tracking-tight">Email me about what is coming due</p>
+                  <p className="text-xs text-muted-foreground">A daily morning check - items due within 7 days, overdue, or hitting their mileage.</p>
+                </div>
+              </div>
+              {emailEnabled !== null && (
+                <Switch checked={emailEnabled} onCheckedChange={toggleEmail} aria-label="Toggle email reminders" />
+              )}
             </div>
 
             {reminders.length === 0 ? (
